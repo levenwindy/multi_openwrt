@@ -89,21 +89,6 @@ jobs:
           sudo -E apt-get -qq update
           sudo -E apt-get -qq install build-essential libncurses5-dev libncursesw5-dev \
             zlib1g-dev gawk git gettext libssl-dev xsltproc rsync wget unzip python3 qemu-utils
-      
-      - name: TEST Docker-Images
-        run: |
-         echo "matrix.TARGETS:"
-         echo ${{ matrix.TARGETS }}
-         echo "--------------------------------"
-         echo "fromJson(needs.Config.outputs.TARGETS):"
-         echo ${{fromJson(needs.Config.outputs.TARGETS)}}
-         echo "fromJson(needs.Config.outputs):"
-         echo ${{fromJson(needs.Config.outputs)}}
-         echo "fromJson(needs.Config):"
-         echo ${{fromJson(needs.Config)}}
-         echo "--------------------------------"
-         echo "matrix"
-         echo "$matrix"
 
       - name: Generate Variables
         id: env
