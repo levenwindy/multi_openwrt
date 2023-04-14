@@ -156,10 +156,11 @@ jobs:
           echo "----------------------------------"
           cat .config
         
-      - name: TEST cat $GITHUB_WORKSPACE/config/mini-packages.config
+      - name: TEST cat $GITHUB_WORKSPACE/config/mini-packages.config | tr -s 
         run: |
           cd immortalwrt-imagebuilder-$DEVICE_TARGET-$DEVICE_SUBTARGET.Linux-x86_64
           echo "----------------------------------"
-          cat $GITHUB_WORKSPACE/config/mini-packages.config
+          cat $GITHUB_WORKSPACE/config/mini-packages.config | tr -s "\n" " "
+          echo "----------------------------------"
       
           
