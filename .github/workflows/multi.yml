@@ -131,8 +131,10 @@ jobs:
             s/KERNEL_VERSION/$KERNEL_VERSION/g; \
             s/DEVICE_PLATFORM/$DEVICE_PLATFORM/g" files/etc/opkg/distfeeds.conf
           echo '------------------------------------'
-          echo 'KERNEL_VERSION： $KERNEL_VERSION'
-            
+          ls packages | grep kernel | awk -F '_' '{print $2}'
+          echo "$(ls packages | grep kernel | awk -F '_' '{print $2}')"
+          
+          
       - name: Build Mini
         run: |
           cd immortalwrt-imagebuilder-$DEVICE_TARGET-$DEVICE_SUBTARGET.Linux-x86_64
