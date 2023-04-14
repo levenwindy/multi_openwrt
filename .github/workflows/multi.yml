@@ -119,4 +119,47 @@ jobs:
      # - name: Login To Alibaba Cloud Container Registry
      #   run: |
      #     docker login -u ${{ secrets.ALIYUN_USERNAME }} -p ${{ secrets.ALIYUN_PWD }} registry.cn-shanghai.aliyuncs.com
-
+     
+      - name: Set Mini Image Builder
+        # 替换源 config/repositories.conf files/etc/opkg/distfeeds.conf
+        run: |
+          tar -xJf *.tar.xz
+          cd immortalwrt-imagebuilder-$DEVICE_TARGET-$DEVICE_SUBTARGET.Linux-x86_64
+          cp -f $GITHUB_WORKSPACE/config/repositories.conf .
+          sed -i "s/DEVICE_SUBTARGET/$DEVICE_SUBTARGET/g; \
+            s/DEVICE_TARGET/$DEVICE_TARGET/g; \
+            s/DEVICE_PLATFORM/$DEVICE_PLATFORM/g" repositories.conf
+          cp -rf $GITHUB_WORKSPACE/files .
+          chmod +x files/etc/rc.local
+          export KERNEL_VERSION="$(ls packages | grep kernel | awk -F '_' '{print $2}')"
+          sed -i "s/DEVICE_SUBTARGET/$DEVICE_SUBTARGET/g; \
+            s/DEVICE_TARGET/$DEVICE_TARGET/g; \
+            s/KERNEL_VERSION/$KERNEL_VERSION/g; \
+            s/DEVICE_PLATFORM/$DEVICE_PLATFORM/g" files/etc/opkg/distfeeds.conf
+          echo '------------------------------------'
+          echo 'KERNEL_VERSION： $KERNEL_VERSION'
+            
+      - name: Build Mini RootFS
+          #make image PACKAGES="$CONFIG_MINI_PACKAGES" FILES="files"
+          #cp bin/targets/$DEVICE_TARGET/$DEVICE_SUBTARGET/*rootfs.tar.gz $GITHUB_WORKSPACE
+          #cd $GITHUB_WORKSPACE
+          #rm -rf immortalwrt-imagebuilder-$DEVICE_TARGET-$DEVICE_SUBTARGET.Linux-x86_64
+        run: |
+          cd immortalwrt-imagebuilder-$DEVICE_TARGET-$DEVICE_SUBTARGET.Linux-x86_64
+          sed -i "/CONFIG_TARGET_ROOTFS_SQUASHFS/s/.*/# CONFIG_TARGET_ROOTFS_SQUASHFS is not set/;
+            /CONFIG_TARGET_ROOTFS_EXT4FS/s/.*/# CONFIG_TARGET_ROOTFS_EXT4FS is not set/" .config
+          export CONFIG_MINI_PACKAGES=$(cat $GITHUB_WORKSPACE/config/mini-packages.config | tr -s "\n" " ")
+        
+      - name: TEST cat .config
+        run: |
+          cd immortalwrt-imagebuilder-$DEVICE_TARGET-$DEVICE_SUBTARGET.Linux-x86_64
+          echo "----------------------------------"
+          cat .config
+        
+      - name: TEST cat $GITHUB_WORKSPACE/config/mini-packages.config
+        run: |
+          cd immortalwrt-imagebuilder-$DEVICE_TARGET-$DEVICE_SUBTARGET.Linux-x86_64
+          echo "----------------------------------"
+          cat $GITHUB_WORKSPACE/config/mini-packages.config
+      
+          
