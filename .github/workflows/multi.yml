@@ -9,7 +9,13 @@ name: Multi ImmortalWRT Images
 
 env:
   #PREFIX_URL: https://storage.openwrt.cc/snapshots/targets
-  PREFIX_URL: https://downloads.openwrt.org/snapshots/targets
+  PREFIX_URL: https://downloads.immortalwrt.org   
+  VERSION: 21.02.5
+#DEVICE_PLATFORM: x86_64
+#DEVICE_TARGET： x86
+#DEVICE_SUBTARGET: 64
+#DOCKER_IMAGE_ARCH: linux/amd64
+#DOCKER_EXTERA_TAG: amd64
 
 on:
   workflow_dispatch:
@@ -83,6 +89,10 @@ jobs:
          echo "--------------------------------"
          echo "fromJson(needs.Config.outputs.TARGETS):"
          echo ${{fromJson(needs.Config.outputs.TARGETS)}}
+         echo "fromJson(needs.Config.outputs):"
+         echo ${{fromJson(needs.Config.outputs)}}
+         echo "fromJson(needs.Config):"
+         echo ${{fromJson(needs.Config)}}
          echo "--------------------------------"
          echo "matrix"
          echo "$matrix"
@@ -108,21 +118,14 @@ jobs:
           echo "DOCKER_IMAGE_ARCH=$DOCKER_IMAGE_ARCH" >> $GITHUB_ENV
           export DOCKER_EXTERA_TAG=$(echo ${{ matrix.TARGETS }} | awk -F '/' '{print $5}')
           echo "DOCKER_EXTERA_TAG=$DOCKER_EXTERA_TAG" >> $GITHUB_ENV
-          echo "--------------------------------"
-          echo "DEVICE_PLATFORM: $DEVICE_PLATFORM"
-          echo "DEVICE_TARGET： $DEVICE_TARGET"
-          echo "DEVICE_SUBTARGET: $DEVICE_SUBTARGET"
-          echo "DOCKER_IMAGE_ARCH: $DOCKER_IMAGE_ARCH"
-          echo "DOCKER_EXTERA_TAG: $DOCKER_EXTERA_TAG"
-          echo ""
-          echo ""
-          echo ""
-          echo ""
           
       - name: Download Image Builder
+          # wget -q $PREFIX_URL/$DEVICE_TARGET/$DEVICE_SUBTARGET/immortalwrt-imagebuilder-$DEVICE_TARGET-$DEVICE_SUBTARGET.Linux-x86_64.tar.xz
+          # https://downloads.immortalwrt.org/releases/21.02.5/targets/x86/64/immortalwrt-imagebuilder-21.02.5-x86-64.Linux-x86_64.tar.xz
         run: |
-          wget -q $PREFIX_URL/$DEVICE_TARGET/$DEVICE_SUBTARGET/immortalwrt-imagebuilder-$DEVICE_TARGET-$DEVICE_SUBTARGET.Linux-x86_64.tar.xz
-
+          wget -q $PREFIX_URL/releases/$VERSION/targets/$DEVICE_TARGET/$DEVICE_SUBTARGET/immortalwrt-imagebuilder-$VERSION-$DEVICE_TARGET-$DEVICE_SUBTARGET.Linux-$DEVICE_PLATFORM.tar.xz
+       
+          
       - name: Login To DockerHub
         uses: docker/login-action@master
         with:
