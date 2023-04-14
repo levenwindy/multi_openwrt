@@ -131,8 +131,7 @@ jobs:
             s/KERNEL_VERSION/$KERNEL_VERSION/g; \
             s/DEVICE_PLATFORM/$DEVICE_PLATFORM/g" files/etc/opkg/distfeeds.conf
           echo '------------------------------------'
-          ls packages | grep kernel | awk -F '_' '{print $2}'
-          echo "$(ls packages | grep kernel | awk -F '_' '{print $2}')"
+          ls packages 
           
           
       - name: Build Mini
