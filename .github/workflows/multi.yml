@@ -70,21 +70,23 @@ jobs:
     strategy:
       fail-fast: false
       matrix: ${{fromJson(needs.Config.outputs.TARGETS)}}
-    run: |
-      echo "matrix.TARGETS:"
-      echo ${{ matrix.TARGETS }}
-      echo "--------------------------------"
-      echo "fromJson(needs.Config.outputs.TARGETS):"
-      echo ${{fromJson(needs.Config.outputs.TARGETS)}}
-      echo "--------------------------------"
-      echo "matrix"
-      echo "$matrix"
       
 
     steps:
       - name: Checkout
         uses: actions/checkout@main
-
+        
+      - name: TEST Docker-Images
+        run: |
+         echo "matrix.TARGETS:"
+         echo ${{ matrix.TARGETS }}
+         echo "--------------------------------"
+         echo "fromJson(needs.Config.outputs.TARGETS):"
+         echo ${{fromJson(needs.Config.outputs.TARGETS)}}
+         echo "--------------------------------"
+         echo "matrix"
+         echo "$matrix"
+      
       - name: Initialization Environment
         env:
           DEBIAN_FRONTEND: noninteractive
