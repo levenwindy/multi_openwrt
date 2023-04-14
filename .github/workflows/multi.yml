@@ -108,7 +108,8 @@ jobs:
           # wget -q $PREFIX_URL/$DEVICE_TARGET/$DEVICE_SUBTARGET/immortalwrt-imagebuilder-$DEVICE_TARGET-$DEVICE_SUBTARGET.Linux-x86_64.tar.xz
           # https://downloads.immortalwrt.org/releases/21.02.5/targets/x86/64/immortalwrt-imagebuilder-21.02.5-x86-64.Linux-x86_64.tar.xz
         run: |
-          wget -q $PREFIX_URL/releases/$VERSION/targets/$DEVICE_TARGET/$DEVICE_SUBTARGET/immortalwrt-imagebuilder-$VERSION-$DEVICE_TARGET-$DEVICE_SUBTARGET.Linux-$DEVICE_PLATFORM.tar.xz
+          wget -q $PREFIX_URL/releases/$VERSION/targets/$DEVICE_TARGET/$DEVICE_SUBTARGET/immortalwrt-imagebuilder-$VERSION-$DEVICE_TARGET-$DEVICE_SUBTARGET.Linux-$DEVICE_PLATFORM.tar.xz || echo "$PREFIX_URL/releases/$VERSION/targets/$DEVICE_TARGET/$DEVICE_SUBTARGET/immortalwrt-imagebuilder-$VERSION-$DEVICE_TARGET-$DEVICE_SUBTARGET.Linux-$DEVICE_PLATFORM.tar.xz" 
+          
        
           
       - name: Login To DockerHub
