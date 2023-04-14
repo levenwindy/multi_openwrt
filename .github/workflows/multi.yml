@@ -9,7 +9,7 @@ name: Multi ImmortalWRT Images
 
 env:
   #PREFIX_URL: https://storage.openwrt.cc/snapshots/targets
-  PREFIX_URL: https://downloads.immortalwrt.org   
+  PREFIX_URL: https://downloads.immortalwrt.org/snapshots/targets  
   VERSION: 21.02.5
 #DEVICE_PLATFORM: x86_64
 #DEVICE_TARGET： x86
@@ -105,13 +105,11 @@ jobs:
           echo "DOCKER_EXTERA_TAG=$DOCKER_EXTERA_TAG" >> $GITHUB_ENV
           
       - name: Download Image Builder
-          # wget -q $PREFIX_URL/$DEVICE_TARGET/$DEVICE_SUBTARGET/immortalwrt-imagebuilder-$DEVICE_TARGET-$DEVICE_SUBTARGET.Linux-x86_64.tar.xz
-          # https://downloads.immortalwrt.org/releases/21.02.5/targets/x86/64/immortalwrt-imagebuilder-21.02.5-x86-64.Linux-x86_64.tar.xz
-        run: |
-          wget -q $PREFIX_URL/releases/$VERSION/targets/$DEVICE_TARGET/$DEVICE_SUBTARGET/immortalwrt-imagebuilder-$VERSION-$DEVICE_TARGET-$DEVICE_SUBTARGET.Linux-$DEVICE_PLATFORM.tar.xz || echo "$PREFIX_URL/releases/$VERSION/targets/$DEVICE_TARGET/$DEVICE_SUBTARGET/immortalwrt-imagebuilder-$VERSION-$DEVICE_TARGET-$DEVICE_SUBTARGET.Linux-$DEVICE_PLATFORM.tar.xz" 
-          
-       
-          
+          # https://downloads.immortalwrt.org/snapshots/targets/x86/64/immortalwrt-imagebuilder-x86-64.Linux-x86_64.tar.xz
+        run: | 
+          echo "$PREFIX_URL/$DEVICE_TARGET/$DEVICE_SUBTARGET/immortalwrt-imagebuilder-$DEVICE_TARGET-$DEVICE_SUBTARGET.Linux-x86_64.tar.xz" 
+          wget -q $PREFIX_URL/$DEVICE_TARGET/$DEVICE_SUBTARGET/immortalwrt-imagebuilder-$DEVICE_TARGET-$DEVICE_SUBTARGET.Linux-x86_64.tar.xz
+
       - name: Login To DockerHub
         uses: docker/login-action@master
         with:
