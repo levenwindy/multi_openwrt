@@ -140,9 +140,12 @@ jobs:
             /CONFIG_TARGET_ROOTFS_EXT4FS/s/.*/# CONFIG_TARGET_ROOTFS_EXT4FS is not set/" .config
           export CONFIG_MINI_PACKAGES=$(cat $GITHUB_WORKSPACE/config/mini-packages.config | tr -s "\n" " ")
           make image PACKAGES="$CONFIG_MINI_PACKAGES" FILES="files"
-          cp bin/targets/$DEVICE_TARGET/$DEVICE_SUBTARGET/*rootfs.tar.gz $GITHUB_WORKSPACE
-          cd $GITHUB_WORKSPACE
-          rm -rf immortalwrt-imagebuilder-$DEVICE_TARGET-$DEVICE_SUBTARGET.Linux-x86_64
+          
+      - name : Upload artifact 上传附件
+        uses: actions/upload-artifact@master
+        with:
+         name: OpenWrt_Mini
+         path: immortalwrt-imagebuilder-$DEVICE_TARGET-$DEVICE_SUBTARGET.Linux-x86_64/bin/targets/
         
       - name: TEST cat .config
         run: |
@@ -156,6 +159,13 @@ jobs:
           echo "----------------------------------"
           cat $GITHUB_WORKSPACE/config/mini-packages.config | tr -s "\n" " "
           echo "----------------------------------"
+         
+      - name : 删除
+        run: |
+          cd immortalwrt-imagebuilder-$DEVICE_TARGET-$DEVICE_SUBTARGET.Linux-x86_64
+          cp bin/targets/$DEVICE_TARGET/$DEVICE_SUBTARGET/*rootfs.tar.gz $GITHUB_WORKSPACE
+          cd $GITHUB_WORKSPACE
+          rm -rf immortalwrt-imagebuilder-$DEVICE_TARGET-$DEVICE_SUBTARGET.Linux-x86_64
         
       - name: Login To DockerHub
         uses: docker/login-action@master
